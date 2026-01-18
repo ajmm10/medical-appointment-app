@@ -57,3 +57,15 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Creación de base de datos y migraciones
+
+Se instaló MySQL en macOS usando Homebrew.  
+Se creó la base de datos `medical_appointment_app` con codificación utf8mb4.
+
+Comandos utilizados:
+- `brew install mysql`
+- `brew services start mysql`
+- `mysql -h 127.0.0.1 -u root`
+- `php artisan migrate`
+
+Las migraciones se ejecutaron correctamente sin errores.
