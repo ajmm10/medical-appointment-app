@@ -69,3 +69,65 @@ Comandos utilizados:
 - `php artisan migrate`
 
 Las migraciones se ejecutaron correctamente sin errores.
+# Medical Appointment App — ADA 2 (Ajustes globales + Admin Layout)
+
+## 1) Configuración inicial (Idioma, zona horaria y MySQL)
+
+### Cambios realizados
+- `config/app.php`
+  - `locale = es`
+  - `timezone = America/Merida`
+- `.env`
+  - Configuración de conexión MySQL (DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+
+### Cómo verifiqué
+- Confirmé configuración limpiando caché:
+  - `php artisan config:clear`
+  - `php artisan cache:clear`
+- Ejecuté migraciones:
+  - `php artisan migrate`
+
+## 2) Ruta administrativa /admin
+
+### Cambios realizados
+- `routes/web.php`
+  - Ruta GET `/admin`
+- `app/Http/Controllers/Admin/AdminController.php`
+  - Método `index()` retorna vista `admin.index`
+- `resources/views/admin/index.blade.php`
+  - Vista para comprobar acceso al panel
+
+### Cómo verifiqué
+- Corrí el servidor: `php artisan serve`
+- Abrí: `http://127.0.0.1:8000/admin`
+
+## 3) Layout administrativo con Blade + Flowbite (includes + slot)
+
+### Integración Flowbite
+- Instalación:
+  - `npm install flowbite`
+- Configuración:
+  - `tailwind.config.js` incluye `./node_modules/flowbite/**/*.js`
+  - plugin `require('flowbite/plugin')`
+- Import:
+  - `resources/js/app.js` -> `import 'flowbite';`
+- Compilación:
+  - `npm run dev`
+
+### Estructura creada
+- Layout (slot):
+  - `resources/views/components/admin-layout.blade.php`
+  - Renderiza contenido dinámico con `{{ $slot }}`
+- Includes:
+  - `resources/views/admin/partials/navbar.blade.php`
+  - `resources/views/admin/partials/sidebar.blade.php`
+  - `resources/views/admin/partials/profile-card.blade.php`
+- Foto:
+  - `public/images/profile.jpg`
+
+### Cómo verifiqué (video)
+En `http://127.0.0.1:8000/admin` se muestra:
+- Sidebar visible
+- Dropdown al dar click a la foto de perfil
+- Página de información del perfil incrustada
+- Texto dinámico (“Hola desde admin”) renderizado desde el slot del layout
