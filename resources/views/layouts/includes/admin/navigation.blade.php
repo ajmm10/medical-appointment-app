@@ -8,9 +8,13 @@
         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h10"/>
         </svg>
                 </button>
-                <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 me-3" alt="FlowBite Logo" />
-                <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center ms-2 md:me-24 gap-2">
+                <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                    <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+                    </svg>
+                </span>
+                <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">{{ config('app.name', 'MedicalApp') }}</span>
                 </a>
             </div>
             <div class="flex items-center">
