@@ -8,7 +8,11 @@ export default {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
-    "./node_modules/flowbite/**/*.js"
+    "./node_modules/flowbite/**/*.js",
+    "./vendor/wireui/wireui/src/*.php",
+    "./vendor/wireui/wireui/ts/**/*.ts",
+    "./vendor/wireui/wireui/src/WireUi/**/*.php",
+    "./vendor/wireui/wireui/src/Components/**/*.php",
   ],
   theme: {
     extend: {},
