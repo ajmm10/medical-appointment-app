@@ -7,11 +7,20 @@ use Illuminate\View\View;
 
 class AdminLayout extends Component
 {
+    public function __construct(
+        public ?string $title = null,
+        /** @var array<int, array{name: string, href?: string}> */
+        public array $breadcrumbs = [],
+    ) {}
+
     /**
      * Get the view / contents that represent the component.
      */
     public function render(): View
     {
-        return view('layouts.admin');
+        return view('layouts.admin', [
+            'title' => $this->title,
+            'breadcrumbs' => $this->breadcrumbs,
+        ]);
     }
 }

@@ -1,72 +1,41 @@
-<aside id="top-bar-sidebar" class="fixed top-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-   <div class="h-full px-3 py-4 overflow-y-auto bg-neutral-primary-soft border-e border-default">
-      <a href="{{ route('admin.dashboard') }}" class="flex items-center ps-2.5 mb-5 gap-2">
-         <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-            <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24">
-               <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+<aside id="top-bar-sidebar" class="fixed left-0 top-0 z-40 h-screen w-64 border-r border-slate-200 bg-white" aria-label="Sidebar">
+    <div class="flex h-16 items-center border-b border-slate-200 px-5">
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 text-2xl font-semibold tracking-tight text-slate-900">
+            <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">+</span>
+            <span>{{ config('app.name', 'Healthify') }}</span>
+        </a>
+    </div>
+
+    <nav class="space-y-1 p-4">
+        <a
+            href="{{ route('admin.dashboard') }}"
+            @class([
+                'flex items-center gap-3 rounded-md px-3 py-2 text-base transition',
+                'bg-slate-100 text-slate-900' => request()->routeIs('admin.dashboard'),
+                'text-slate-700 hover:bg-slate-100' => ! request()->routeIs('admin.dashboard'),
+            ])
+        >
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M10.75 3.25a.75.75 0 0 0-1.5 0v.75H8A2.75 2.75 0 0 0 5.25 6.75V8h9.5V6.75A2.75 2.75 0 0 0 12 4h-1.25v-.75Z" />
+                <path fill-rule="evenodd" d="M3.5 9.5A1.5 1.5 0 0 1 5 8h10a1.5 1.5 0 0 1 1.5 1.5v4.75A2.75 2.75 0 0 1 13.75 17h-7.5A2.75 2.75 0 0 1 3.5 14.25V9.5Zm6.5 2a.75.75 0 0 0-.75.75v.5a.75.75 0 0 0 1.5 0v-.5a.75.75 0 0 0-.75-.75Z" clip-rule="evenodd" />
             </svg>
-         </span>
-         <span class="self-center text-lg text-heading font-semibold whitespace-nowrap">{{ config('app.name', 'MedicalApp') }}</span>
-      </a>
-      <ul class="space-y-2 font-medium">
-         <li>
-            <a href="#" class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand group">
-               <svg class="w-5 h-5 transition duration-75 group-hover:text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6.025A7.5 7.5 0 1 0 17.975 14H10V6.025Z"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 3c-.169 0-.334.014-.5.025V11h7.975c.011-.166.025-.331.025-.5A7.5 7.5 0 0 0 13.5 3Z"/></svg>
-               <span class="ms-3">Dashboard</span>
-            </a>
-         </li>
-         <li>
-            <a href="#" class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand group">
-               <svg class="shrink-0 w-5 h-5 transition duration-75 group-hover:text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v14M9 5v14M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/></svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Kanban</span>
-               <span class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded-sm">Pro</span>
-            </a>
-         </li>
-         <li>
-            <a href="#" class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand group">
-               <svg class="shrink-0 w-5 h-5 transition duration-75 group-hover:text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 13h3.439a.991.991 0 0 1 .908.6 3.978 3.978 0 0 0 7.306 0 .99.99 0 0 1 .908-.6H20M4 13v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6M4 13l2-9h12l2 9M9 7h6m-7 3h8"/></svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-               <span class="inline-flex items-center justify-center w-4.5 h-4.5 ms-2 text-xs font-medium text-fg-danger-strong bg-danger-soft border border-danger-subtle rounded-full">2</span>
-            </a>
-         </li>
-         <li>
-            <a href="#" class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand group">
-               <svg class="shrink-0 w-5 h-5 transition duration-75 group-hover:text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14M8 11v6m4-10v10m4-7v7"/></svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Reports</span>
-            </a>
-         </li>
-         <li>
-            <button type="button" class="flex items-center w-full px-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand group" aria-controls="dropdown-ecommerce" data-collapse-toggle="dropdown-ecommerce" aria-expanded="false">
-               <svg class="shrink-0 w-5 h-5 transition duration-75 group-hover:text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18l-2 9H5L3 4Zm2 9 2 7h10l2-7M9 8h6"/></svg>
-               <span class="flex-1 ms-3 text-left whitespace-nowrap">E-commerce</span>
-               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-               </svg>
-            </button>
-            <ul id="dropdown-ecommerce" class="hidden py-2 space-y-2">
-               <li>
-                  <a href="#" class="flex items-center w-full ps-11 pe-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand">Products</a>
-               </li>
-               <li>
-                  <a href="#" class="flex items-center w-full ps-11 pe-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand">Billing</a>
-               </li>
-               <li>
-                  <a href="#" class="flex items-center w-full ps-11 pe-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand">Invoice</a>
-               </li>
-            </ul>
-         </li>
-         <li>
-            <a href="#" class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand group">
-               <svg class="shrink-0 w-5 h-5 transition duration-75 group-hover:text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-            </a>
-         </li>
-         <li>
-            <a href="#" class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-neutral-tertiary hover:text-fg-brand group">
-               <svg class="shrink-0 w-5 h-5 transition duration-75 group-hover:text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/></svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-            </a>
-         </li>
-      </ul>
-   </div>
+            <span>Dashboard</span>
+        </a>
+
+        <p class="px-3 pt-5 text-xs font-semibold uppercase tracking-wide text-slate-400">Gestion</p>
+
+        <a
+            href="{{ route('admin.roles.index') }}"
+            @class([
+                'flex items-center gap-3 rounded-md px-3 py-2 text-base transition',
+                'bg-slate-100 text-slate-900' => request()->routeIs('admin.roles.*'),
+                'text-slate-700 hover:bg-slate-100' => ! request()->routeIs('admin.roles.*'),
+            ])
+        >
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 2.5A7.5 7.5 0 1 0 17.5 10 7.5 7.5 0 0 0 10 2.5Zm2.58 6.04a.75.75 0 0 1 .88 1.22l-3.5 2.5a.75.75 0 0 1-.92 0l-2-1.5a.75.75 0 0 1 .9-1.2l1.55 1.17 3.09-2.2Z" clip-rule="evenodd" />
+            </svg>
+            <span>Roles y permisos</span>
+        </a>
+    </nav>
 </aside>

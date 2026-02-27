@@ -1,56 +1,16 @@
-<nav class="fixed top-0 z-50 w-full bg-neutral-primary-soft border-b border-default">
-        <div class="px-3 py-3 lg:px-5 lg:pl-3">
-            <div class="flex items-center justify-between">
-            <div class="flex items-center justify-start rtl:justify-end">
-                <button data-drawer-target="top-bar-sidebar" data-drawer-toggle="top-bar-sidebar" aria-controls="top-bar-sidebar" type="button" class="sm:hidden text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base text-sm p-2 focus:outline-none">
-                    <span class="sr-only">Open sidebar</span>
-                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h10"/>
-        </svg>
-                </button>
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center ms-2 md:me-24 gap-2">
-                <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                    <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 6v12m6-6H6"/>
-                    </svg>
-                </span>
-                <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">{{ config('app.name', 'MedicalApp') }}</span>
-                </a>
-            </div>
-            <div class="flex items-center">
-                <div class="flex items-center ms-3">
-                    <div>
-                    <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                        <span class="sr-only">Open user menu</span>
-                        <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
-                    </button>
-                    </div>
-                    <div class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44" id="dropdown-user">
-                    <div class="px-4 py-3 border-b border-default-medium" role="none">
-                        <p class="text-sm font-medium text-heading" role="none">
-                        Neil Sims
-                        </p>
-                        <p class="text-sm text-body truncate" role="none">
-                        neil.sims@flowbite.com
-                        </p>
-                    </div>
-                    <ul class="p-2 text-sm text-body font-medium" role="none">
-                        <li>
-                        <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded" role="menuitem">Dashboard</a>
-                        </li>
-                        <li>
-                        <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded" role="menuitem">Settings</a>
-                        </li>
-                        <li>
-                        <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded" role="menuitem">Earnings</a>
-                        </li>
-                        <li>
-                        <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded" role="menuitem">Sign out</a>
-                        </li>
-                    </ul>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-        </nav>
+@php
+    $user = auth()->user();
+    $initials = $user
+        ? collect(explode(' ', trim($user->name)))
+            ->filter()
+            ->map(fn ($part) => mb_strtoupper(mb_substr($part, 0, 1)))
+            ->take(2)
+            ->join('')
+        : 'TU';
+@endphp
+
+<nav class="fixed top-0 z-30 h-16 w-full border-b border-slate-200 bg-white">
+    <div class="flex h-full items-center justify-end px-4 sm:pl-64 sm:pr-6">
+        <span class="text-sm font-semibold text-indigo-300">{{ $initials }}</span>
+    </div>
+</nav>
