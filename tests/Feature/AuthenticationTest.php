@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -17,7 +18,14 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect('/admin');
+});
+
+test('login screen includes a csrf token field', function () {
+    $response = $this->get('/login');
+
+    $response->assertOk()
+        ->assertSee('name="_token"', false);
 });
 
 test('users cannot authenticate with invalid password', function () {
@@ -29,4 +37,9 @@ test('users cannot authenticate with invalid password', function () {
     ]);
 
     $this->assertGuest();
+});
+
+test('login route uses the web middleware group', function () {
+    expect(Route::getRoutes()->getByName('login')->gatherMiddleware())
+        ->toContain('web');
 });

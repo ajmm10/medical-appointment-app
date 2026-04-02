@@ -41,6 +41,14 @@ it('shows admin role pages for authenticated users', function () {
         ->assertSee(route('admin.roles.index'), false);
 });
 
+it('renders a csrf token on the admin role creation form', function () {
+    $this->actingAs(User::factory()->create());
+
+    $this->get('/admin/roles/create')
+        ->assertOk()
+        ->assertSee('name="_token"', false);
+});
+
 it('stores a role for authenticated users', function () {
     $this->actingAs(User::factory()->create());
 
