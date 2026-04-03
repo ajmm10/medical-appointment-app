@@ -7,7 +7,6 @@ use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -15,32 +14,9 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(): View
     {
-        // Búsqueda (opcional)
-        $query = Role::query();
-
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%'.$request->search.'%');
-        }
-
-        // Ordenamiento (opcional)
-        $sort = $request->get('sort', 'created_at');
-        $direction = $request->get('direction', 'desc');
-
-        if (in_array($sort, ['id', 'name', 'created_at']) && in_array($direction, ['asc', 'desc'])) {
-            $query->orderBy($sort, $direction);
-        } else {
-            $query->latest();
-        }
-
-        // Paginación (opcional)
-        $perPage = (int) $request->get('perPage', 10);
-        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
-
-        $roles = $query->paginate($perPage)->withQueryString();
-
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.roles.index');
     }
 
     /**
@@ -59,6 +35,7 @@ class RoleController extends Controller
         Role::create([
             'name' => $request->string('name')->toString(),
             'guard_name' => 'web',
+            'is_system' => false,
         ]);
 
         return redirect()
@@ -82,8 +59,12 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Role $role): View
+    public function edit(Role $role): View|RedirectResponse
     {
+        if ($redirectResponse = $this->protectedRoleRedirect($role)) {
+            return $redirectResponse;
+        }
+
         return view('admin.roles.edit', compact('role'));
     }
 
@@ -92,6 +73,10 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
+        if ($redirectResponse = $this->protectedRoleRedirect($role)) {
+            return $redirectResponse;
+        }
+
         $role->update([
             'name' => $request->string('name')->toString(),
         ]);
@@ -112,6 +97,10 @@ class RoleController extends Controller
      */
     public function destroy(Role $role): RedirectResponse
     {
+        if ($redirectResponse = $this->protectedRoleRedirect($role)) {
+            return $redirectResponse;
+        }
+
         $role->delete();
 
         return redirect()
@@ -120,6 +109,22 @@ class RoleController extends Controller
                 'icon' => 'success',
                 'title' => 'Rol eliminado',
                 'text' => 'El rol fue eliminado correctamente',
+                'confirmButtonText' => 'OK',
+            ]);
+    }
+
+    private function protectedRoleRedirect(Role $role): ?RedirectResponse
+    {
+        if (! $role->is_system) {
+            return null;
+        }
+
+        return redirect()
+            ->route('admin.roles.index')
+            ->with('swal', [
+                'icon' => 'error',
+                'title' => 'Rol protegido',
+                'text' => 'Los roles del sistema no se pueden editar ni eliminar.',
                 'confirmButtonText' => 'OK',
             ]);
     }

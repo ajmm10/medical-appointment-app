@@ -72,6 +72,11 @@ class RoleTable extends DataTableComponent
                 ->sortable(),
             Column::make('Nombre', 'name')
                 ->sortable(),
+            Column::make('Proteccion', 'is_system')
+                ->label(function ($row) {
+                    return view('admin.roles.protection-badge', ['role' => $row]);
+                })
+                ->sortable(),
             Column::make('Fecha', 'created_at')
                 ->format(fn ($value) => $value->format('Y-m-d H:i:s'))
                 ->sortable(),

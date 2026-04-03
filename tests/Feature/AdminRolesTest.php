@@ -66,6 +66,7 @@ it('stores a role for authenticated users', function () {
     $this->assertDatabaseHas('roles', [
         'name' => 'Medico',
         'guard_name' => 'web',
+        'is_system' => false,
     ]);
 });
 
@@ -86,6 +87,7 @@ it('updates a role for authenticated users and shows success alert', function ()
     $role = Role::query()->create([
         'name' => 'Paciente',
         'guard_name' => 'web',
+        'is_system' => false,
     ]);
 
     $response = $this->put("/admin/roles/{$role->id}", [
@@ -104,6 +106,97 @@ it('updates a role for authenticated users and shows success alert', function ()
         'name' => 'Pacientey',
         'guard_name' => 'web',
     ]);
+});
+
+it('blocks the edit screen for protected system roles', function () {
+    $this->actingAs(User::factory()->create());
+    $role = Role::query()->create([
+        'name' => 'Rol base',
+        'guard_name' => 'web',
+        'is_system' => true,
+    ]);
+
+    $this->get("/admin/roles/{$role->id}/edit")
+        ->assertRedirect(route('admin.roles.index'))
+        ->assertSessionHas('swal', function (array $swal): bool {
+            return $swal['icon'] === 'error'
+                && $swal['title'] === 'Rol protegido'
+                && $swal['text'] === 'Los roles del sistema no se pueden editar ni eliminar.';
+        });
+});
+
+it('prevents updates to protected system roles', function () {
+    $this->actingAs(User::factory()->create());
+    $role = Role::query()->create([
+        'name' => 'Rol base',
+        'guard_name' => 'web',
+        'is_system' => true,
+    ]);
+
+    $this->put("/admin/roles/{$role->id}", [
+        'name' => 'Rol modificado',
+    ])->assertRedirect(route('admin.roles.index'))
+        ->assertSessionHas('swal', function (array $swal): bool {
+            return $swal['icon'] === 'error'
+                && $swal['title'] === 'Rol protegido'
+                && $swal['text'] === 'Los roles del sistema no se pueden editar ni eliminar.';
+        });
+
+    $this->assertDatabaseHas('roles', [
+        'id' => $role->id,
+        'name' => 'Rol base',
+        'is_system' => true,
+    ]);
+});
+
+it('prevents deletion of protected system roles', function () {
+    $this->actingAs(User::factory()->create());
+    $role = Role::query()->create([
+        'name' => 'Rol base',
+        'guard_name' => 'web',
+        'is_system' => true,
+    ]);
+
+    $this->delete("/admin/roles/{$role->id}")
+        ->assertRedirect(route('admin.roles.index'))
+        ->assertSessionHas('swal', function (array $swal): bool {
+            return $swal['icon'] === 'error'
+                && $swal['title'] === 'Rol protegido'
+                && $swal['text'] === 'Los roles del sistema no se pueden editar ni eliminar.';
+        });
+
+    $this->assertDatabaseHas('roles', [
+        'id' => $role->id,
+        'name' => 'Rol base',
+        'is_system' => true,
+    ]);
+});
+
+it('renders the protected role badge and hides action buttons for system roles', function () {
+    $systemRole = Role::query()->create([
+        'name' => 'Rol del sistema',
+        'guard_name' => 'web',
+        'is_system' => true,
+    ]);
+
+    $customRole = Role::query()->create([
+        'name' => 'Rol editable',
+        'guard_name' => 'web',
+        'is_system' => false,
+    ]);
+
+    $systemBadge = view('admin.roles.protection-badge', ['role' => $systemRole])->render();
+    $customBadge = view('admin.roles.protection-badge', ['role' => $customRole])->render();
+    $systemActions = view('admin.roles.actions', ['role' => $systemRole])->render();
+    $customActions = view('admin.roles.actions', ['role' => $customRole])->render();
+
+    expect($systemBadge)->toContain('Sistema');
+    expect($customBadge)->toContain('Personalizado');
+    expect($systemActions)->toContain('Protegido');
+    expect($systemActions)->not->toContain(route('admin.roles.edit', $systemRole));
+    expect($systemActions)->not->toContain(route('admin.roles.destroy', $systemRole));
+    expect($customActions)->toContain(route('admin.roles.edit', $customRole));
+    expect($customActions)->toContain(route('admin.roles.destroy', $customRole));
 });
 
 it('validates role name when updating a role', function () {
