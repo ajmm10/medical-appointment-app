@@ -37,5 +37,20 @@
             </svg>
             <span>Roles y permisos</span>
         </a>
+
+        <a
+            href="{{ route('admin.users.index') }}"
+            @class([
+                'flex items-center gap-3 rounded-md px-3 py-2 text-base transition',
+                'bg-slate-100 text-slate-900' => request()->routeIs('admin.users.*'),
+                'text-slate-700 hover:bg-slate-100' => ! request()->routeIs('admin.users.*'),
+            ])
+        >
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M10 2.5a3.25 3.25 0 1 1 0 6.5 3.25 3.25 0 0 1 0-6.5Z" />
+                <path d="M4.25 15.25A4.75 4.75 0 0 1 9 10.5h2a4.75 4.75 0 0 1 4.75 4.75.75.75 0 0 1-.75.75H5a.75.75 0 0 1-.75-.75Z" />
+            </svg>
+            <span>Usuarios</span>
+        </a>
     </nav>
 </aside>
