@@ -83,7 +83,7 @@ class UserTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make('Rol')
-                ->label(fn (User $user): string => $user->roles->pluck('name')->implode(', ') ?: 'Sin rol'),
+                ->label(fn (User $user) => view('admin.users.roles-badges', ['user' => $user])),
             Column::make('Acciones')
                 ->label(function (User $user) {
                     return view('admin.users.actions', ['user' => $user]);
