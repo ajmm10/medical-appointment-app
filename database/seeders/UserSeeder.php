@@ -14,7 +14,9 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = Role::query()->pluck('name');
+        $assignableRoles = Role::query()
+            ->where('name', '!=', 'Super administrador')
+            ->pluck('name');
 
         $adminUser = User::query()->firstOrCreate([
             'email' => 'test@test.com',
@@ -24,13 +26,13 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $adminUser->syncRoles(['Administrador']);
+        $adminUser->syncRoles(['Administrador', 'Super administrador']);
 
         User::factory()
             ->count(12)
             ->create()
-            ->each(function (User $user) use ($roles): void {
-                $user->syncRoles([$roles->random()]);
+            ->each(function (User $user) use ($assignableRoles): void {
+                $user->syncRoles([$assignableRoles->random()]);
             });
     }
 }

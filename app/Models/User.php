@@ -68,4 +68,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isPrincipalAdministrator(): bool
+    {
+        return $this->email === 'test@test.com' || $this->hasRole('Super administrador');
+    }
+
+    public function deletionProtectionMessage(?self $actingUser): ?string
+    {
+        if ($actingUser?->is($this)) {
+            return 'No puedes eliminar tu propia cuenta.';
+        }
+
+        if ($this->isPrincipalAdministrator()) {
+            return 'No puedes eliminar al administrador principal.';
+        }
+
+        return null;
+    }
 }

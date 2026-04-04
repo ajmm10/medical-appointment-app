@@ -2,14 +2,12 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Actions\Fortify\PasswordValidationRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
-class StoreUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
-    use PasswordValidationRules;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,11 +23,13 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = $this->route('user');
+
         return [
             'name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s\'-]+$/u'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user?->id)],
             'role_id' => ['required', 'integer', Rule::exists('roles', 'id')],
-            'password' => $this->passwordRules(),
+            'password' => ['nullable', 'string', Password::default(), 'confirmed'],
         ];
     }
 
@@ -48,7 +48,6 @@ class StoreUserRequest extends FormRequest
             'email.unique' => 'Ya existe un usuario con ese correo.',
             'role_id.required' => 'Debes seleccionar un rol.',
             'role_id.exists' => 'El rol seleccionado no es valido.',
-            'password.required' => 'La contrasena es obligatoria.',
             'password.confirmed' => 'La confirmacion de la contrasena no coincide.',
         ];
     }

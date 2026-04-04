@@ -16,6 +16,7 @@ it('seeds the default login user and additional test users with roles', function
     $loginUser = User::query()->where('email', 'test@test.com')->firstOrFail();
 
     expect($loginUser->hasRole('Administrador'))->toBeTrue();
+    expect($loginUser->hasRole('Super administrador'))->toBeTrue();
     expect(User::query()->count())->toBe(13);
     expect(User::query()->withCount('roles')->get()->every(fn (User $user): bool => $user->roles_count > 0))->toBeTrue();
 });

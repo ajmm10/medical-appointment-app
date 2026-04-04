@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Jetstream\Contracts\DeletesUsers;
 use Spatie\Permission\Models\Role;
 
@@ -40,10 +40,10 @@ class UserController extends Controller
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $user = User::query()->create([
-            'name' => $request->string('name')->toString(),
-            'email' => $request->string('email')->toString(),
+            'name' => $request->string('name')->squish()->toString(),
+            'email' => $request->string('email')->lower()->toString(),
             'email_verified_at' => now(),
-            'password' => Hash::make($request->string('password')->toString()),
+            'password' => $request->string('password')->toString(),
         ]);
 
         $role = Role::query()->findOrFail($request->integer('role_id'));
@@ -61,11 +61,64 @@ class UserController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user): View
+    {
+        $roles = Role::query()
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return view('admin.users.edit', compact('roles', 'user'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    {
+        $user->update([
+            'name' => $request->string('name')->squish()->toString(),
+            'email' => $request->string('email')->lower()->toString(),
+        ]);
+
+        if ($request->filled('password')) {
+            $user->update([
+                'password' => $request->string('password')->toString(),
+            ]);
+        }
+
+        $role = Role::query()->findOrFail($request->integer('role_id'));
+
+        $user->syncRoles([$role]);
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('swal', [
+                'icon' => 'success',
+                'title' => 'Usuario actualizado',
+                'text' => 'El usuario fue modificado correctamente',
+                'confirmButtonText' => 'OK',
+            ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, User $user, DeletesUsers $deletesUsers): RedirectResponse
     {
-        abort_if($request->user()?->is($user), 403, 'YOU CANNOT DELETE YOURSELF.');
+        $protectionMessage = $user->deletionProtectionMessage($request->user());
+
+        if ($protectionMessage !== null) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Usuario protegido',
+                    'text' => $protectionMessage,
+                    'confirmButtonText' => 'OK',
+                ]);
+        }
 
         $deletesUsers->delete($user);
 
