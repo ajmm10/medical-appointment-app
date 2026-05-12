@@ -47,8 +47,13 @@ class UserController extends Controller
         ]);
 
         $role = Role::query()->findOrFail($request->integer('role_id'));
-
         $user->syncRoles([$role]);
+
+        if ($role->name === 'Paciente') {
+            $patient = $user->patient()->create();
+
+            return redirect()->route('admin.patients.edit', $patient);
+        }
 
         return redirect()
             ->route('admin.users.index')
