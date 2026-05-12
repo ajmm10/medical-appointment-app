@@ -3,64 +3,53 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdatePatientRequest;
+use App\Models\BloodType;
 use App\Models\Patient;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
         return view('admin.patients.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
         return view('admin.patients.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(): RedirectResponse
     {
-        //
+        return redirect()->route('admin.users.create');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Patient $patient)
+    public function show(Patient $patient): View
     {
         return view('admin.patients.show', compact('patient'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Patient $patient)
+    public function edit(Patient $patient): View
     {
-        return view('admin.patients.edit', compact('patient'));
+        $patient->loadMissing('user');
+        $bloodTypes = BloodType::query()->orderBy('name')->get();
+
+        return view('admin.patients.edit', compact('patient', 'bloodTypes'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Patient $patient)
+    public function update(UpdatePatientRequest $request, Patient $patient): RedirectResponse
     {
-        //
+        $patient->update($request->validated());
+
+        return redirect()
+            ->route('admin.patients.edit', $patient)
+            ->with('success', 'Paciente actualizado correctamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Patient $patient)
+    public function destroy(Patient $patient): RedirectResponse
     {
-        //
+        return redirect()->route('admin.patients.index');
     }
 }

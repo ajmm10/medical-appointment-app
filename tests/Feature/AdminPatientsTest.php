@@ -82,11 +82,21 @@ it('stores a non-patient user and redirects to users index without creating a pa
 
 it('shows the patient edit page for authenticated users', function () {
     $admin = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->create([
+        'user_id' => User::factory()->create([
+            'name' => 'Prueba paciente',
+            'email' => 'prueba@demo.com',
+        ]),
+    ]);
 
     $this->actingAs($admin);
 
     $this->get(route('admin.patients.edit', $patient))
         ->assertOk()
-        ->assertSee('Editar');
+        ->assertSee('Editar')
+        ->assertSee('Prueba paciente')
+        ->assertSee('Volver')
+        ->assertSee('Guardar cambios')
+        ->assertSee('Editar usuario')
+        ->assertSee('bg-purple-500', false);
 });
