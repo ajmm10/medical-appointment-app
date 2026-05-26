@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// routes/web.php
+use App\Livewire\Doctors\EditDoctor;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/doctors/{doctor}/edit', EditDoctor::class)->name('doctors.edit');
+});
 
 Route::redirect('/', '/admin');
 // Route::get('/', function () {

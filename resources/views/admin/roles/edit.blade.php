@@ -11,7 +11,6 @@
         'name' => 'Editar',
     ],
 ]">
-
     <x-slot name="action">
         <x-wire-button blue href="{{ route('admin.roles.index') }}">
             <i class="fa-solid fa-arrow-left"></i>

@@ -85,6 +85,9 @@ class UserController extends Controller
         $user->update([
             'name' => $request->string('name')->squish()->toString(),
             'email' => $request->string('email')->lower()->toString(),
+            'identification_number' => $request->string('identification_number')->squish()->toString() ?: null,
+            'phone' => $request->string('phone')->squish()->toString() ?: null,
+            'address' => $request->string('address')->squish()->toString() ?: null,
         ]);
 
         if ($request->filled('password')) {

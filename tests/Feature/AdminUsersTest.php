@@ -62,6 +62,9 @@ it('shows the user edit form for authenticated users', function () {
     $managedUser = User::factory()->create([
         'name' => 'Usuario Editable',
         'email' => 'editable@demo.com',
+        'identification_number' => '123123123',
+        'phone' => '9991234567',
+        'address' => 'Calle 123',
     ]);
     $role = Role::findOrCreate('Recepcionista', 'web');
 
@@ -71,9 +74,16 @@ it('shows the user edit form for authenticated users', function () {
 
     $this->get(route('admin.users.edit', $managedUser))
         ->assertOk()
-        ->assertSee('Editar usuario')
+        ->assertSee('Editar')
         ->assertSee('Usuario Editable')
         ->assertSee('editable@demo.com')
+        ->assertSee('Numero de ID')
+        ->assertSee('123123123')
+        ->assertSee('Telefono')
+        ->assertSee('9991234567')
+        ->assertSee('Direccion')
+        ->assertSee('Calle 123')
+        ->assertSee('Define los permisos y accesos del usuario')
         ->assertSee($role->name);
 });
 
@@ -155,6 +165,9 @@ it('updates a user and synchronizes the selected role', function () {
         'name' => 'Usuario Actualizado',
         'email' => 'actualizado@demo.com',
         'role_id' => $newRole->id,
+        'identification_number' => 'ABC-123',
+        'phone' => '9991112233',
+        'address' => 'Avenida Central 45',
         'password' => '',
         'password_confirmation' => '',
     ])->assertRedirect(route('admin.users.index'))
@@ -168,6 +181,9 @@ it('updates a user and synchronizes the selected role', function () {
 
     expect($managedUser->name)->toBe('Usuario Actualizado');
     expect($managedUser->email)->toBe('actualizado@demo.com');
+    expect($managedUser->identification_number)->toBe('ABC-123');
+    expect($managedUser->phone)->toBe('9991112233');
+    expect($managedUser->address)->toBe('Avenida Central 45');
     expect($managedUser->hasRole($newRole))->toBeTrue();
     expect($managedUser->hasRole($oldRole))->toBeFalse();
 });

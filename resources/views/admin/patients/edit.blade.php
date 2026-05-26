@@ -142,10 +142,44 @@
                         </div>
 
                     </div>
+                    <div class=" "grip lg:grid-cols-2 gap-4">
 
+                    </div>
+                    <div x-show="tab === 'antecedentes'">
+                        <span class="text-gray-500 font-semibold">Telefono:</span>
+                        <span class= "text-gray-900 text-sm ml-1">{{ $patient->user->phone }}</span>
+                </div>
+                <div x-show="tab === 'antecedentes'">
+                        <span class="text-gray-500 font-semibold">email:</span>
+                        <span class= "text-gray-900 text-sm ml-1">{{ $patient->user->email }}</span>
+                </div>
+                <div x-show="tab === 'dirección'">
+                        <span class="text-gray-500 font-semibold">dirección:</span>
+                        <span class= "text-gray-900 text-sm ml-1">{{ $patient->user->phone }}</span>
                 </div>
             </div>
-        </x-wire-card>
+            {{ -- Contenido Tab 2: Antecedentes --}}
+            <div x-show=="tab === 'antecedentes'" style="display:none;">
+            <div class="grid-cols-2 gap-4">
+            <div>
+                <x-wire-textarea label="Enfermedades crónicas" name="chronic_conditions">
+                    {{ old('allergies', $patient->allergies) }}                {{ old('allergies', $patient->allergies) }}
+                </x-wire-textarea>
+            </div>
+            <div>
+                <x-wire-textarea label="Antecedentes quirurjicos=" name="surgical_history">">
+                {{ old('allergies', $patient->allergies) }}
+                </x-wire-textarea>
+            </div>
+            <div>
+                <x-wire-textarea label="Alergias familiares" name="family_history">
+                    {{ old('allergies', $patient->allergies) }}
+                {{ old('allergies', $patient->allergies) }}
+                </x-wire-textarea>
+            </div>
+            <div>
+                </x-wire-textarea>
+            </x-wire-card>
 
     </form>
 

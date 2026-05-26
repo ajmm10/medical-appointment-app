@@ -30,6 +30,9 @@ class UpdateUserRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user?->id)],
             'role_id' => ['required', 'integer', Rule::exists('roles', 'id')],
             'password' => ['nullable', 'string', Password::default(), 'confirmed'],
+            'identification_number' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -49,6 +52,9 @@ class UpdateUserRequest extends FormRequest
             'role_id.required' => 'Debes seleccionar un rol.',
             'role_id.exists' => 'El rol seleccionado no es valido.',
             'password.confirmed' => 'La confirmacion de la contrasena no coincide.',
+            'identification_number.max' => 'El numero de ID no puede superar los 255 caracteres.',
+            'phone.max' => 'El telefono no puede superar los 20 caracteres.',
+            'address.max' => 'La direccion no puede superar los 255 caracteres.',
         ];
     }
 }
