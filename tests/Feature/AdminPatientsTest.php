@@ -100,3 +100,45 @@ it('shows the patient edit page for authenticated users', function () {
         ->assertSee('Editar usuario')
         ->assertSee('bg-purple-500', false);
 });
+
+it('updates patient medical data and redirects back to edit page', function () {
+    $admin = User::factory()->create();
+    $patient = Patient::factory()->create();
+
+    $this->actingAs($admin);
+
+    $response = $this->put(route('admin.patients.update', $patient), [
+        'allergies' => 'Polen y polvo',
+        'chronic_conditions' => 'Hipertensión',
+        'surgical_history' => 'Apendicectomía 2015',
+        'family_history' => 'Diabetes en abuelos',
+        'observations' => 'Paciente colaborador',
+        'emergency_contact_name' => 'Ana García',
+        'emergency_contact_phone' => '(555) 123-4567',
+        'emergency_contact_relationship' => 'Madre',
+    ]);
+
+    $response->assertRedirect(route('admin.patients.edit', $patient));
+
+    $this->assertDatabaseHas('patients', [
+        'id' => $patient->id,
+        'allergies' => 'Polen y polvo',
+        'chronic_conditions' => 'Hipertensión',
+        'surgical_history' => 'Apendicectomía 2015',
+        'family_history' => 'Diabetes en abuelos',
+        'observations' => 'Paciente colaborador',
+        'emergency_contact_name' => 'Ana García',
+        'emergency_contact_relationship' => 'Madre',
+    ]);
+});
+
+it('rejects invalid blood type on patient update', function () {
+    $admin = User::factory()->create();
+    $patient = Patient::factory()->create();
+
+    $this->actingAs($admin);
+
+    $this->put(route('admin.patients.update', $patient), [
+        'blood_type_id' => 9999,
+    ])->assertSessionHasErrors('blood_type_id');
+});
